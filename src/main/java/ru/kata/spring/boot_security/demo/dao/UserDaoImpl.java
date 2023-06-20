@@ -38,10 +38,9 @@ public class UserDaoImpl implements UserDao {
         return entityManager.find(User.class, id);
     }
 
-    @Override
-    public void updateUser(User user, Set<Role> roles) {
+    public User updateUser(User user, Set<Role> roles) {
         user.setRoles(roles);
-        entityManager.merge(user);
+        return entityManager.merge(user);
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.util.Set;
 public interface UserDao {
     void addUser(User user);
     void deleteUserById(long id);
-    void updateUser(User user, Set<Role> roles);
+    User updateUser(User user, Set<Role> roles);
     List<User> getAllUsers();
     User findUserById(long id);
     public User findUserByEmail (String email);
