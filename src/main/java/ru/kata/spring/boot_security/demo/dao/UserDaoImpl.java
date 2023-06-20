@@ -55,11 +55,4 @@ public class UserDaoImpl implements UserDao {
         return (User) query.getSingleResult();
     }
 
-    @Override
-    public User loadUserByUsername(String name) {
-        Query query = entityManager.createQuery("select distinct u from User u join fetch u.roles where u.name=:name", User.class);
-        query.setParameter("name", name);
-        return (User) query.getSingleResult();
-    }
-
 }

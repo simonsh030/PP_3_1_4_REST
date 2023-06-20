@@ -13,5 +13,4 @@ public interface UserDao {
     User findUserById(long id);
     public User findUserByEmail (String email);
 
-    public User loadUserByUsername (String name);
 }
