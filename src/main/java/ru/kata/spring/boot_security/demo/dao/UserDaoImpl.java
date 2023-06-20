@@ -2,11 +2,12 @@ package ru.kata.spring.boot_security.demo.dao;
 
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
+import javax.persistence.Query;
 import java.util.List;
 import java.util.Set;
 
@@ -16,10 +17,14 @@ public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Transactional
+    private final PasswordEncoder passwordEncoder;
+
+    public UserDaoImpl(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @Override
-    public void addUser(User user, Set < Role > roles) {
-        user.setRoles(roles);
+    public void addUser(User user) {
         entityManager.persist(user);
     }
 
@@ -34,23 +39,20 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User updateUser(User user, Set < Role > roles) {
+    public void updateUser(User user, Set<Role> roles) {
         user.setRoles(roles);
-        return entityManager.merge(user);
+        entityManager.merge(user);
     }
 
     @Override
-    public List < User > getAllUsers() {
+    public List<User> getAllUsers() {
         return entityManager.createQuery("select distinct u from User u join fetch u.roles", User.class).getResultList();
-
     }
 
     @Override
-    public User findUserByName(String name) {
-        return entityManager.createQuery("select u from User u join fetch u.roles where u.name=:name", User.class)
-                .setParameter("name", name)
-                .getSingleResult();
-
-
+    public User findUserByEmail(String email) {
+        Query query = entityManager.createQuery("select distinct u from User u join fetch u.roles where u.email=:email", User.class);
+        query.setParameter("email", email);
+        return (User) query.getSingleResult();
     }
 }

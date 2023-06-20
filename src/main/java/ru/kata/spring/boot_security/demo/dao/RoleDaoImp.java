@@ -18,14 +18,41 @@ public class RoleDaoImp implements RoleDao {
 
 
     public Set<Role> findRoles(List<Long> roles) {
-        TypedQuery<Role> q = entityManager.createQuery("select r from Role r where r.id in :role", Role.class);
+        TypedQuery<Role> q = entityManager.createQuery("select distinct r from Role r join fetch r.users u where r.id in :role", Role.class);
         q.setParameter("role", roles);
         return new HashSet<>(q.getResultList());
-
     }
 
     public List<Role> getAllRoles() {
-        return entityManager.createQuery("SELECT r FROM Role r", Role.class).getResultList();
+        return entityManager.createQuery("select distinct r from Role r left join fetch r.users", Role.class).getResultList();
     }
 
+    public void addDefaultRoles() {
+        List<Long> roleIds = List.of(1L, 2L);
+
+        Set<Role> existingRoles = findRoles(roleIds);
+        boolean hasUserRole = false;
+        boolean hasAdminRole = false;
+
+        for (Role role : existingRoles) {
+            if (role.getName().equals("ROLE_USER")) {
+                hasUserRole = true;
+            }
+            if (role.getName().equals("ROLE_ADMIN")) {
+                hasAdminRole = true;
+            }
+        }
+
+        if (!hasUserRole) {
+            Role roleUser = new Role();
+            roleUser.setName("ROLE_USER");
+            entityManager.persist(roleUser);
+        }
+
+        if (!hasAdminRole) {
+            Role roleAdmin = new Role();
+            roleAdmin.setName("ROLE_ADMIN");
+            entityManager.persist(roleAdmin);
+        }
+    }
 }
