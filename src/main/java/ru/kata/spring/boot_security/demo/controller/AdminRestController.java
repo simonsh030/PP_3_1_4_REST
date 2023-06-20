@@ -54,33 +54,6 @@ public class AdminRestController {
         List<User> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
-//
-//    @GetMapping()
-//    public List<User> userList(){
-//        return userService.listUsers();
-//    }
-//
-//    @GetMapping("/{id}")
-//    public User showUser(@PathVariable long id) {
-//        return userService.findUserById(id);
-//    }
-//
-//    @PostMapping()
-//    public List<User> addUser(@RequestBody User user){
-//        userService.add(user, user.getRoles());
-//        return userService.listUsers();
-//    }
-//
-//    @PutMapping()
-//    public User update(@RequestBody User user){
-//        userService.change(user, user.getRoles());
-//        return user;
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public List<User> deleteUser(@PathVariable long id) {
-//        userService.delete(id);
-//        return userService.listUsers();
-//    }
+
 
 }
