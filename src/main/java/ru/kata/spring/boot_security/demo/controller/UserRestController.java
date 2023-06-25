@@ -1,4 +1,5 @@
 package ru.kata.spring.boot_security.demo.controller;
+
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +23,14 @@ public class UserRestController {
     }
 
     @GetMapping()
-    public ResponseEntity<User> getUserByEmail(Principal principal) {
-        User user = userService.findUserByEmail(principal.getName());
+    public ResponseEntity<User> getUserByName(Principal principal) {
+        User user = userService.findUserByName(principal.getName());
         if (user != null) {
             return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 
 
 }

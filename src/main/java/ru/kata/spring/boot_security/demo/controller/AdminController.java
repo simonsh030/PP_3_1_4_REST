@@ -1,5 +1,8 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -22,6 +25,7 @@ public class AdminController {
     public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
+
     }
 
     @GetMapping()
@@ -31,6 +35,7 @@ public class AdminController {
         model.addAttribute("allUsers", userService.getAllUsers());
         model.addAttribute("userMain", user);
         model.addAttribute("roles", roleService.getAllRoles());
+        model.addAttribute("errorMessage", "");
         return "admin";
     }
 

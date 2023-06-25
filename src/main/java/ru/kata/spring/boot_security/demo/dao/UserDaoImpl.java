@@ -2,7 +2,6 @@ package ru.kata.spring.boot_security.demo.dao;
 
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -17,17 +16,12 @@ public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private final PasswordEncoder passwordEncoder;
-
-    public UserDaoImpl(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
     @Override
-    public void addUser(User user) {
-        entityManager.persist(user);
-    }
+    public void addUser(User user, Set<Role> roles) {
+            user.setRoles(roles);
+            entityManager.persist(user);
 
+    }
     @Override
     public void deleteUserById(long id) {
         entityManager.remove(findUserById(id));
@@ -38,10 +32,12 @@ public class UserDaoImpl implements UserDao {
         return entityManager.find(User.class, id);
     }
 
+    @Override
     public User updateUser(User user, Set<Role> roles) {
-        user.setRoles(roles);
-        return entityManager.merge(user);
+            user.setRoles(roles);
+            return entityManager.merge(user);
     }
+
 
     @Override
     public List<User> getAllUsers() {
@@ -49,10 +45,18 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findUserByEmail(String email) {
-        Query query = entityManager.createQuery("select distinct u from User u join fetch u.roles where u.email=:email", User.class);
-        query.setParameter("email", email);
-        return (User) query.getSingleResult();
+    public User findUserByName(String name) {
+        return entityManager.createQuery("select u from User u join fetch u.roles where u.name=:name", User.class)
+                .setParameter("name", name)
+                .getSingleResult();
+    }
+
+    @Override
+    public boolean isUserNameUnique(String name) {
+        Query query = entityManager.createQuery("select count(u) from User u where u.name = :name");
+        query.setParameter("name", name);
+        long count = (long) query.getSingleResult();
+        return count == 0;
     }
 
 }

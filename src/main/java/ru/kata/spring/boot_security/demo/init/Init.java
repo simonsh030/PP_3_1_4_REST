@@ -39,7 +39,12 @@ public class Init {
         User admin = new User("admin", "Admin", "admin@example.com", "admin_password");
         User normalUser = new User("user", "User", "user@example.com", "user_password");
 
-        userService.addUser(admin, adminRoles);
-        userService.addUser(normalUser, userRoles);
+        if (userService.isUserNameUnique(admin.getName())){
+            userService.addUser(admin, adminRoles);
+        }
+        if (userService.isUserNameUnique(normalUser.getName())){
+            userService.addUser(normalUser, userRoles);
+        }
+
     }
 }
