@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -20,6 +21,8 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String name;
     private String last_name;
+
+
     private String email;
     private String password;
 
@@ -27,7 +30,7 @@ public class User implements UserDetails {
     @JsonIgnore
     private String passwordConfirm;
 
-    @ManyToMany (fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(
@@ -35,7 +38,6 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(
                     name = "roles_id"))
     private Set<Role> roles;
-
     public User() {
     }
 
